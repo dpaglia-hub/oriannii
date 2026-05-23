@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Orianni"/>
+<meta name="theme-color" content="#EEEDFE"/>
+<title>Orianni — Mi Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css"/>
+<style>
+:root{
+  --pu50:#EEEDFE;--pu100:#CECBF6;--pu200:#AFA9EC;--pu400:#7F77DD;--pu600:#534AB7;--pu800:#3C3489;--pu900:#26215C;
+  --te50:#E1F5EE;--te100:#9FE1CB;--te400:#1D9E75;--te600:#0F6E56;--te900:#04342C;
+  --pi50:#FBEAF0;--pi100:#F4C0D1;--pi400:#D4537E;--pi600:#993556;--pi900:#4B1528;
+  --am50:#FAEEDA;--am100:#FAC775;--am400:#EF9F27;--am600:#854F0B;--am900:#412402;
+  --gray50:#F8F7F4;--gray100:#EFEFEB;--gray200:#D3D1C7;--gray500:#888780;--gray900:#1A1A18;
+  --bg:#FAFAF8;--surface:#FFFFFF;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --txt:#1A1A18;--txt2:#5F5E5A;--txt3:#A0A09A;
+  --font:'DM Sans',sans-serif;--serif:'DM Serif Display',serif;
+  --rsm:10px;--rmd:14px;--rlg:20px;--rxl:24px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);font-family:var(--font);color:var(--txt);overscroll-behavior:none;}
+input,textarea,select,button{font-family:var(--font);font-size:14px;}
+button{cursor:pointer;}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);}
+.screen{display:none;padding-bottom:90px;animation:fu .22s ease both;}
+.screen.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-top:0.5px solid var(--border);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100;}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;border:none;background:none;color:var(--txt3);}
+.ntab i{font-size:21px;}
+.ntab span{font-size:10px;font-weight:500;}
+.ntab.on{color:var(--pu600);}
+
+/* HERO */
+.hero{background:var(--pu50);padding:52px 20px 20px;position:relative;}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.hero-greet{font-size:13px;color:var(--pu600);font-weight:500;}
+.hero-name{font-family:var(--serif);font-size:28px;color:var(--pu900);line-height:1.1;}
+.hero-quote{font-size:12px;color:var(--pu600);font-style:italic;margin-top:6px;line-height:1.5;}
+.streak{background:var(--pu100);border-radius:14px;padding:8px 12px;text-align:center;min-width:64px;}
+.streak-n{font-size:22px;font-weight:500;color:var(--pu900);display:block;}
+.streak-l{font-size:10px;color:var(--pu600);font-weight:500;}
+.settings-btn{position:absolute;top:14px;right:16px;background:var(--pu100);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--pu800);font-size:17px;}
+.hero-row{display:flex;gap:14px;align-items:center;margin-top:16px;}
+.ring-wrap{position:relative;width:68px;height:68px;flex-shrink:0;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-pct{font-size:16px;font-weight:500;color:var(--pu900);}
+.ring-sub{font-size:10px;color:var(--pu600);}
+.hero-chips{flex:1;display:flex;flex-direction:column;gap:6px;}
+.hchip{background:var(--pu100);border-radius:10px;padding:6px 10px;display:flex;justify-content:space-between;align-items:center;}
+.hchip-l{font-size:11px;color:var(--pu800);}
+.hchip-v{font-size:12px;font-weight:500;color:var(--pu900);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* SECTION */
+.sec{padding:18px 20px 8px;}
+.sec-title{font-size:11px;font-weight:500;color:var(--txt3);text-transform:uppercase;letter-spacing:.07em;}
+.page-title{font-family:var(--serif);font-size:24px;color:var(--txt);margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--txt2);}
+
+/* CARDS */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rlg);margin:0 16px 10px;padding:14px 16px;}
+
+/* AFFIRMATION */
+.aff-card{background:var(--pi50);border:0.5px solid var(--pi100);border-radius:var(--rlg);margin:0 16px 10px;padding:16px;}
+.aff-txt{font-family:var(--serif);font-size:15px;color:var(--pi900);line-height:1.6;font-style:italic;}
+.aff-nav{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
+.aff-dots{display:flex;gap:4px;}
+.aff-dot{width:5px;height:5px;border-radius:50%;background:var(--pi100);}
+.aff-dot.on{background:var(--pi400);}
+.aff-next{font-size:12px;color:var(--pi600);background:none;border:none;padding:4px 8px;}
+
+/* HABITS */
+.hrow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border);}
+.hrow:last-child{border-bottom:none;}
+.hck{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border2);background:var(--surface);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+.hck.done{background:var(--te400);border-color:var(--te400);}
+.hck.done::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff;}
+.htxt{flex:1;font-size:13px;color:var(--txt);}
+.htxt.done{color:var(--txt3);text-decoration:line-through;}
+.hpill{font-size:11px;background:var(--te50);color:var(--te600);padding:2px 8px;border-radius:20px;white-space:nowrap;}
+
+/* PROGRESS BAR */
+.pbar-wrap{display:flex;gap:10px;align-items:center;padding:4px 20px 10px;}
+.pbar{flex:1;height:5px;background:var(--gray100);border-radius:10px;overflow:hidden;}
+.pbar-fill{height:100%;background:var(--te400);border-radius:10px;transition:width .4s;}
+.pbar-pct{font-size:12px;color:var(--te600);font-weight:500;min-width:32px;text-align:right;}
+
+/* ENGLISH */
+.eng-card{background:var(--am50);border:0.5px solid var(--am100);border-radius:var(--rlg);margin:0 16px 10px;padding:16px;}
+.eng-lbl{font-size:10px;font-weight:500;color:var(--am600);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+.eng-phrase{font-size:18px;font-weight:500;color:var(--am900);margin-bottom:4px;line-height:1.3;}
+.eng-trans{font-size:13px;color:var(--am600);margin-bottom:10px;}
+.eng-ctx{font-size:11px;color:var(--am600);background:var(--am100);padding:3px 10px;border-radius:20px;display:inline-block;}
+.eng-btns{display:flex;justify-content:space-between;margin-top:12px;}
+.eng-btn{padding:8px 18px;border-radius:var(--rsm);border:0.5px solid var(--am400);background:var(--surface);color:var(--am900);font-size:12px;}
+
+/* MOOD */
+.mood-row{display:flex;gap:8px;}
+.mbtn{flex:1;padding:10px 4px;border-radius:12px;border:0.5px solid var(--border);background:var(--gray50);text-align:center;font-size:22px;border:none;}
+.mbtn span{display:block;font-size:10px;color:var(--txt3);margin-top:3px;}
+.mbtn.on{background:var(--pu50);outline:1.5px solid var(--pu400);}
+
+/* SAVINGS */
+.sav-card{background:var(--te50);border:0.5px solid var(--te100);border-radius:var(--rlg);margin:0 16px 10px;padding:16px;}
+.sav-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.sav-lbl{font-size:11px;color:var(--te600);font-weight:500;margin-bottom:2px;}
+.sav-amt{font-family:var(--serif);font-size:28px;color:var(--te900);}
+.sav-bar{height:8px;background:var(--te100);border-radius:10px;overflow:hidden;margin-bottom:6px;}
+.sav-fill{height:100%;background:var(--te400);border-radius:10px;transition:width .5s;}
+.sav-row{display:flex;gap:8px;margin-top:12px;}
+.sav-row input{flex:1;padding:9px 12px;border-radius:var(--rsm);border:0.5px solid var(--te400);background:var(--surface);color:var(--txt);}
+.sav-row button{padding:9px 16px;background:var(--te400);color:#fff;border:none;border-radius:var(--rsm);font-weight:500;}
+
+/* PHASES */
+.phase-scroll{display:flex;gap:10px;overflow-x:auto;padding:0 16px 6px;scrollbar-width:none;}
+.phase-scroll::-webkit-scrollbar{display:none;}
+.pchip{flex-shrink:0;width:148px;border-radius:var(--rmd);padding:12px;border:0.5px solid var(--border);background:var(--surface);cursor:pointer;}
+.pchip.cur{border-color:var(--pu400);background:var(--pu50);}
+.pchip-n{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.pchip-name{font-size:14px;font-weight:500;color:var(--txt);}
+.pchip.cur .pchip-name{color:var(--pu900);}
+.pchip-mo{font-size:11px;color:var(--txt3);margin-top:2px;}
+.pirow{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:13px;color:var(--txt2);border-bottom:0.5px solid var(--border);}
+.pirow:last-child{border-bottom:none;}
+.pirow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--te400);flex-shrink:0;}
+
+/* RESOURCES */
+.res-item{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rmd);margin-bottom:8px;cursor:pointer;}
+.ricon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ri-pu{background:var(--pu50);color:var(--pu600);}
+.ri-te{background:var(--te50);color:var(--te600);}
+.ri-pi{background:var(--pi50);color:var(--pi600);}
+.ri-am{background:var(--am50);color:var(--am600);}
+.rbody{flex:1;}
+.rname{font-size:13px;font-weight:500;color:var(--txt);}
+.rdesc{font-size:12px;color:var(--txt2);margin-top:2px;line-height:1.4;}
+.rtag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:5px;background:var(--pu50);color:var(--pu800);}
+
+/* JOB LOG */
+.jrow{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border);}
+.jrow:last-child{border-bottom:none;}
+.jname{flex:1;font-size:13px;color:var(--txt);}
+.jstat{font-size:11px;padding:3px 10px;border-radius:20px;white-space:nowrap;cursor:pointer;}
+.js-p{background:var(--am50);color:var(--am600);}
+.js-s{background:var(--te50);color:var(--te600);}
+.js-r{background:var(--pu50);color:var(--pu600);}
+.jdel{color:var(--txt3);padding:4px;font-size:15px;background:none;border:none;}
+
+/* PORTFOLIO */
+.port-item{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rmd);margin-bottom:8px;padding:12px 14px;}
+.port-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.port-name{font-size:14px;font-weight:500;color:var(--txt);}
+.port-desc{font-size:12px;color:var(--txt2);margin-top:4px;line-height:1.5;}
+.port-tag{display:inline-block;font-size:11px;background:var(--pi50);color:var(--pi600);padding:2px 8px;border-radius:20px;margin-top:6px;}
+.port-del{color:var(--txt3);background:none;border:none;font-size:15px;padding:0 0 0 8px;}
+
+/* SUNDAY */
+.sun-banner{background:var(--pu50);border-radius:var(--rlg);margin:0 16px 12px;padding:14px 16px;border:0.5px solid var(--pu100);}
+.wstats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:0 16px 12px;}
+.wstat{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rmd);padding:12px;text-align:center;}
+.wstat-n{font-family:var(--serif);font-size:22px;color:var(--txt);}
+.wstat-l{font-size:11px;color:var(--txt3);margin-top:2px;}
+.sun-q{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rmd);margin-bottom:8px;padding:12px 14px;}
+.sun-q label{font-size:13px;color:var(--txt);display:block;margin-bottom:8px;font-weight:500;}
+.sun-q textarea{width:100%;padding:8px 10px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);font-size:13px;color:var(--txt);resize:none;min-height:58px;font-family:var(--font);}
+
+/* ONBOARD */
+.onboard{padding:48px 24px 32px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+.ob-icon{font-size:48px;text-align:center;margin-bottom:16px;}
+.ob-title{font-family:var(--serif);font-size:32px;color:var(--pu900);text-align:center;margin-bottom:8px;}
+.ob-sub{font-size:14px;color:var(--txt2);text-align:center;line-height:1.6;margin-bottom:28px;}
+.ob-label{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:6px;display:block;}
+.ob-input{width:100%;padding:12px 14px;border-radius:var(--rmd);border:0.5px solid var(--border2);background:var(--surface);font-size:14px;color:var(--txt);margin-bottom:14px;}
+.ob-input:focus{outline:none;border-color:var(--pu400);}
+.ob-btn{width:100%;padding:15px;background:var(--pu600);color:#fff;border:none;border-radius:var(--rlg);font-size:16px;font-weight:500;margin-top:8px;}
+
+/* SETTINGS MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 24px max(24px,env(safe-area-inset-bottom));width:100%;max-width:430px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:var(--serif);font-size:20px;color:var(--txt);margin-bottom:16px;}
+.modal-label{font-size:12px;font-weight:500;color:var(--txt2);margin-bottom:5px;display:block;margin-top:12px;}
+.modal-input{width:100%;padding:10px 12px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);font-size:14px;color:var(--txt);}
+.modal-input:focus{outline:none;border-color:var(--pu400);}
+.modal-save{width:100%;padding:13px;background:var(--pu600);color:#fff;border:none;border-radius:var(--rmd);font-size:14px;font-weight:500;margin-top:16px;}
+.modal-reset{width:100%;padding:11px;background:none;color:#E24B4A;border:0.5px solid #E24B4A;border-radius:var(--rmd);font-size:13px;margin-top:8px;}
+.modal-close{float:right;background:none;border:none;font-size:22px;color:var(--txt3);margin-top:-4px;}
+
+/* INPUTS GENERAL */
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--pu400) !important;}
+
+/* BUTTONS */
+.send-btn{width:calc(100% - 32px);margin:4px 16px 12px;padding:13px;background:var(--pu50);color:var(--pu800);border:0.5px solid var(--pu200);border-radius:var(--rmd);font-size:13px;font-weight:500;}
+.act-btn{width:100%;padding:11px;border:none;border-radius:var(--rmd);font-size:13px;font-weight:500;margin-top:10px;}
+.act-btn.purple{background:var(--pu600);color:#fff;}
+.act-btn.teal{background:var(--te400);color:#fff;}
+.act-btn.pink{background:var(--pi400);color:#fff;}
+.add-row{display:flex;gap:8px;margin-bottom:10px;}
+.add-row input{flex:1;padding:9px 12px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);color:var(--txt);}
+.add-row button{padding:9px 14px;background:var(--pu400);color:#fff;border:none;border-radius:var(--rsm);font-size:16px;}
+
+/* TOAST */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--pu900);color:#fff;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:500;z-index:300;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+
+/* DOCS */
+.doc-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:0.5px solid var(--border);}
+.doc-row:last-child{border-bottom:none;}
+
+/* MONEY ROWS */
+.money-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px;}
+.money-row:last-child{border-bottom:none;}
+</style>
+</head>
+<body>
+<div class="app" id="APP">
+
+<!-- ONBOARDING -->
+<div id="s-onboard" class="screen active">
+  <div class="onboard">
+    <div class="ob-icon">🌸</div>
+    <div class="ob-title">Hola, Orianni</div>
+    <div class="ob-sub">Tu playbook personal para construir una vida hermosa en A Coruña. Solo un momento para configurarlo.</div>
+    <span class="ob-label">¿En qué fase estás ahora?</span>
+    <select id="ob-phase" class="ob-input">
+      <option value="0">Fase 1 — Estabilizar (Meses 1–3)</option>
+      <option value="1">Fase 2 — Crecer (Meses 4–6)</option>
+      <option value="2">Fase 3 — Monetizar (Meses 7–9)</option>
+      <option value="3">Fase 4 — Prosperar (Meses 10–12)</option>
+    </select>
+    <span class="ob-label">¿Cuánto has ahorrado hasta ahora? (€)</span>
+    <input type="number" id="ob-savings" class="ob-input" placeholder="0" min="0" step="1"/>
+    <span class="ob-label">¿Cuál es tu meta principal esta semana?</span>
+    <input type="text" id="ob-goal" class="ob-input" placeholder="Ej: Aplicar a 3 hoteles, practicar inglés..."/>
+    <button class="ob-btn" onclick="finishOnboard()">Empezar mi playbook 🌸</button>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="s-home" class="screen">
+  <div class="hero">
+    <button class="settings-btn" onclick="openSettings()" aria-label="Ajustes"><i class="ti ti-settings"></i></button>
+    <div class="hero-top">
+      <div>
+        <div class="hero-greet" id="greeting">Buenos días</div>
+        <div class="hero-name">Orianni</div>
+        <div class="hero-quote">"No empiezo desde cero.<br>Empiezo desde la fortaleza."</div>
+      </div>
+      <div class="streak">
+        <span class="streak-n" id="streak-n">0</span>
+        <span class="streak-l">días 🔥</span>
+      </div>
+    </div>
+    <div class="hero-row">
+      <div class="ring-wrap">
+        <svg width="68" height="68" viewBox="0 0 68 68">
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#CECBF6" stroke-width="6"/>
+          <circle cx="34" cy="34" r="28" fill="none" stroke="#534AB7" stroke-width="6" stroke-dasharray="175.9" id="ring-dash" stroke-dashoffset="175.9" stroke-linecap="round"/>
+        </svg>
+        <div class="ring-lbl"><span class="ring-pct" id="ring-pct">0%</span><span class="ring-sub">hábitos</span></div>
+      </div>
+      <div class="hero-chips">
+        <div class="hchip"><span class="hchip-l">Fase actual</span><span class="hchip-v" id="h-phase">Fase 1</span></div>
+        <div class="hchip"><span class="hchip-l">Ahorro</span><span class="hchip-v" id="h-sav">€0 / €1,000</span></div>
+        <div class="hchip"><span class="hchip-l">Meta semana</span><span class="hchip-v" id="h-goal">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sun-home-banner" style="display:none;margin:14px 16px 0;">
+    <div class="sun-banner">
+      <div style="font-size:15px;font-weight:500;color:var(--pu900);margin-bottom:3px;">Es domingo — día de reset 🌿</div>
+      <div style="font-size:13px;color:var(--pu600);">Tómate un café y reflexiona sobre tu semana.</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-title">Afirmación de hoy</div></div>
+  <div class="aff-card">
+    <div class="aff-txt" id="aff-txt">Tengo fortaleza, corazón y disciplina.</div>
+    <div class="aff-nav">
+      <div class="aff-dots" id="aff-dots"></div>
+      <button class="aff-next" onclick="nextAff()">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-title">Hábitos de hoy</div></div>
+  <div class="card" id="home-habits" style="padding:6px 16px;"></div>
+
+  <div class="sec"><div class="sec-title">Inglés del día</div></div>
+  <div class="eng-card">
+    <div class="eng-lbl">Frase de hoy</div>
+    <div class="eng-phrase" id="eng-p">Good morning, I'm available to work</div>
+    <div class="eng-trans" id="eng-t">Buenos días, estoy disponible para trabajar</div>
+    <span class="eng-ctx" id="eng-c">Hostelería · entrevista</span>
+    <div class="eng-btns">
+      <button class="eng-btn" onclick="prevEng()">← Anterior</button>
+      <button class="eng-btn" onclick="nextEng()">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-title">¿Cómo te sientes hoy?</div></div>
+  <div class="card">
+    <div class="mood-row">
+      <button class="mbtn" onclick="setMood(this,'Cansada')"><div>😔</div><span>Cansada</span></button>
+      <button class="mbtn" onclick="setMood(this,'Normal')"><div>😐</div><span>Normal</span></button>
+      <button class="mbtn" onclick="setMood(this,'Bien')"><div>🙂</div><span>Bien</span></button>
+      <button class="mbtn" onclick="setMood(this,'Fuerte')"><div>💪</div><span>Fuerte</span></button>
+    </div>
+  </div>
+  <button class="send-btn" onclick="openClaude('Hoy me siento '+curMood+'. Soy Orianni, venezolana viviendo en A Coruña construyendo mi vida paso a paso. Dame un mensaje de ánimo personalizado, cálido y breve.')">Mensaje de ánimo con Claude ↗</button>
+</div>
+
+<!-- HABITS -->
+<div id="s-habits" class="screen">
+  <div style="padding:20px 20px 4px;">
+    <div class="page-title">Rutina diaria</div>
+    <div class="page-sub">Toca cada hábito para marcarlo</div>
+  </div>
+  <div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" id="hbar" style="width:0%"></div></div><span class="pbar-pct" id="hbar-pct">0%</span></div>
+  <div class="sec"><div class="sec-title">Mañana</div></div>
+  <div class="card" id="h-morning" style="padding:6px 16px;"></div>
+  <div class="sec"><div class="sec-title">Tarde</div></div>
+  <div class="card" id="h-afternoon" style="padding:6px 16px;"></div>
+  <div class="sec"><div class="sec-title">Noche</div></div>
+  <div class="card" id="h-evening" style="padding:6px 16px;"></div>
+  <div class="sec"><div class="sec-title">Solicitudes de trabajo</div></div>
+  <div class="card">
+    <div style="font-size:13px;font-weight:500;color:var(--txt);margin-bottom:10px;">Meta: 3 aplicaciones por día · <span id="job-count" style="color:var(--te600);">0 hoy</span></div>
+    <div class="add-row"><input type="text" id="job-in" placeholder="Hotel, restaurante, empresa..."/><button onclick="addJob()">+</button></div>
+    <div id="job-list"></div>
+  </div>
+  <button class="send-btn" onclick="openClaude('Escríbeme un mensaje cálido y breve en español para presentarme como Orianni, venezolana, responsable, trabajadora y con experiencia en cocina, al contactar un hotel o restaurante en A Coruña.')">Mensaje para presentarme ↗</button>
+</div>
+
+<!-- PLAN -->
+<div id="s-plan" class="screen">
+  <div style="padding:20px 20px 8px;">
+    <div class="page-title">Mi plan del año</div>
+    <div class="page-sub">Toca cada fase para ver los pasos</div>
+  </div>
+  <div class="phase-scroll" id="phase-scroll"></div>
+  <div class="card" id="phase-detail" style="margin-top:10px;"></div>
+  <div style="height:8px;"></div>
+  <button class="send-btn" onclick="openClaude('Soy Orianni, estoy en la Fase '+(activePh+1)+' de mi playbook en A Coruña. ¿Qué debería hacer exactamente esta semana para avanzar?')">Plan de acción esta semana ↗</button>
+</div>
+
+<!-- MONEY -->
+<div id="s-money" class="screen">
+  <div style="padding:20px 20px 8px;">
+    <div class="page-title">Mi dinero</div>
+  </div>
+  <div class="sav-card">
+    <div class="sav-top">
+      <div><div class="sav-lbl">Fondo de emergencia</div><div class="sav-amt" id="sav-d">€0</div></div>
+      <div style="text-align:right;"><div class="sav-lbl">Meta</div><div style="font-size:18px;font-weight:500;color:var(--te600);">€1,000</div></div>
+    </div>
+    <div class="sav-bar"><div class="sav-fill" id="sav-bar" style="width:0%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--te600);margin-bottom:4px;"><span>€0</span><span id="sav-pct">0%</span><span>€1,000</span></div>
+    <div class="sav-row"><input type="number" id="sav-in" placeholder="Añadir ahorros (€)" min="0" step="1"/><button onclick="addSav()">Guardar</button></div>
+  </div>
+  <div class="sec"><div class="sec-title">Metas semanales</div></div>
+  <div class="card">
+    <div class="money-row"><span style="color:var(--txt2);">Ahorro semanal</span><span style="font-weight:500;">€20–€50</span></div>
+    <div class="money-row"><span style="color:var(--txt2);">Inglés / aprendizaje</span><span style="font-weight:500;">€10–€30/mes</span></div>
+    <div class="money-row"><span style="color:var(--txt2);">Autocuidado</span><span style="font-weight:500;">Pequeño pero presente</span></div>
+  </div>
+  <div class="sec"><div class="sec-title">Carpeta legal Orianni</div></div>
+  <div class="card" id="doc-list" style="padding:6px 16px;"></div>
+  <button class="send-btn" onclick="openClaude('Explícame cómo organizar mis documentos importantes como inmigrante venezolana en España, con carpeta física y digital paso a paso.')">Guía carpeta de documentos ↗</button>
+</div>
+
+<!-- PORTFOLIO -->
+<div id="s-portfolio" class="screen">
+  <div style="padding:20px 20px 8px;">
+    <div class="page-title">Mi portafolio</div>
+    <div class="page-sub">Registra tus platos, recetas y habilidades</div>
+  </div>
+  <div class="card">
+    <div style="font-size:14px;font-weight:500;color:var(--txt);margin-bottom:10px;">Añadir entrada</div>
+    <input type="text" id="port-name" placeholder="Nombre del plato o habilidad" style="width:100%;padding:9px 12px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);color:var(--txt);margin-bottom:8px;"/>
+    <textarea id="port-desc" placeholder="Descripción breve — ingredientes, técnica, ocasión..." style="width:100%;padding:9px 12px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);color:var(--txt);resize:none;min-height:60px;margin-bottom:8px;font-family:var(--font);"></textarea>
+    <select id="port-cat" style="width:100%;padding:9px 12px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);color:var(--txt);margin-bottom:10px;">
+      <option>Cocina venezolana</option><option>Cocina española</option><option>Repostería</option><option>Meal prep</option><option>Habilidad</option>
+    </select>
+    <button class="act-btn pink" onclick="addPort()">Añadir al portafolio</button>
+  </div>
+  <div class="sec"><div class="sec-title">Mis entradas (<span id="port-count">0</span>)</div></div>
+  <div id="port-list" style="padding:0 16px;"></div>
+  <div style="height:8px;"></div>
+  <button class="send-btn" onclick="openClaude('Tengo estas entradas en mi portafolio de cocina: '+(ST.portfolio&&ST.portfolio.length?ST.portfolio.map(function(p){return p.name;}).join(', '):'ninguna aún')+'. Ayúdame a escribir una descripción profesional y cálida de mis habilidades culinarias para compartir con clientes potenciales en A Coruña.')">Descripción profesional ↗</button>
+</div>
+
+<!-- SUNDAY RESET -->
+<div id="s-sunday" class="screen">
+  <div style="padding:20px 20px 8px;">
+    <div class="page-title">Domingo de reset</div>
+    <div class="page-sub">Tu reunión semanal contigo misma ☕</div>
+  </div>
+  <div class="wstats" id="wstats"></div>
+  <div class="sec"><div class="sec-title">Reflexión semanal</div></div>
+  <div id="sun-qs" style="padding:0 16px;"></div>
+  <div class="sec"><div class="sec-title">Intención para la próxima semana</div></div>
+  <div class="card">
+    <input type="text" id="next-goal" placeholder="¿Cuál es tu meta más importante esta semana?" style="width:100%;padding:9px 12px;border-radius:var(--rsm);border:0.5px solid var(--border2);background:var(--gray50);color:var(--txt);"/>
+    <button class="act-btn purple" onclick="saveGoal()">Guardar intención</button>
+  </div>
+  <button class="send-btn" onclick="doSundayReflect()">Reflexión con Claude ↗</button>
+  <div class="sec"><div class="sec-title">Recursos en A Coruña</div></div>
+  <div id="resource-list" style="padding:0 16px;"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav" id="bnav" style="display:none;">
+  <button class="ntab on" onclick="goTab('s-home',this)"><i class="ti ti-home"></i><span>Inicio</span></button>
+  <button class="ntab" onclick="goTab('s-habits',this)"><i class="ti ti-sun"></i><span>Hábitos</span></button>
+  <button class="ntab" onclick="goTab('s-plan',this)"><i class="ti ti-map"></i><span>Plan</span></button>
+  <button class="ntab" onclick="goTab('s-money',this)"><i class="ti ti-coin"></i><span>Dinero</span></button>
+  <button class="ntab" onclick="goTab('s-portfolio',this)"><i class="ti ti-camera"></i><span>Portafolio</span></button>
+  <button class="ntab" onclick="goTab('s-sunday',this)"><i class="ti ti-calendar"></i><span>Domingo</span></button>
+</nav>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-bg" id="settings-modal" onclick="closeSettingsOutside(event)">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div class="modal-title" style="margin-bottom:0;">Ajustes</div>
+      <button class="modal-close" onclick="closeSettings()">×</button>
+    </div>
+    <span class="modal-label">Fase actual</span>
+    <select id="set-phase" class="modal-input">
+      <option value="0">Fase 1 — Estabilizar</option>
+      <option value="1">Fase 2 — Crecer</option>
+      <option value="2">Fase 3 — Monetizar</option>
+      <option value="3">Fase 4 — Prosperar</option>
+    </select>
+    <span class="modal-label">Meta de la semana</span>
+    <input type="text" id="set-goal" class="modal-input" placeholder="Tu meta principal..."/>
+    <span class="modal-label">Ahorro actual (€)</span>
+    <input type="number" id="set-savings" class="modal-input" placeholder="0" min="0" step="1"/>
+    <button class="modal-save" onclick="saveSettings()">Guardar cambios</button>
+    <button class="modal-reset" onclick="resetApp()">Reiniciar app desde cero</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const SKEY='orianni_v4';
+const HABITS=[
+  {t:'morning',l:'Caminar (aunque sea 15 min)',p:'Mañana'},
+  {t:'morning',l:'Desayuno tranquilo',p:'Mañana'},
+  {t:'morning',l:'Inglés 15 min (Duolingo / ELSA)',p:'Mañana'},
+  {t:'morning',l:'Aplicar a 3 trabajos',p:'Mañana'},
+  {t:'afternoon',l:'Trabajar con buena energía',p:'Tarde'},
+  {t:'afternoon',l:'Observar, aprender, conectar',p:'Tarde'},
+  {t:'evening',l:'Cocinar algo rico',p:'Noche'},
+  {t:'evening',l:'Descansar sin culpa',p:'Noche'},
+  {t:'evening',l:'Reflexión del día (2 min)',p:'Noche'},
+];
+const AFFS=[
+  'Tengo fortaleza, corazón y disciplina. Todo lo que necesito para construir una vida hermosa ya vive en mí.',
+  'No estoy atrasada. Estoy en transición — y cada día que avanzo cuenta.',
+  'La paz también es productividad. Descansar es parte del éxito.',
+  'Soy responsable, cálida y trabajadora. Eso tiene un valor enorme aquí.',
+  'Construyo lentamente, con intención. Las vidas bonitas no ocurren por accidente.',
+  'Mi historia de migración es una historia de valentía, no de carencia.',
+  'Cada pequeño ahorro, cada aplicación enviada, cada frase en inglés — todo suma.',
+];
+const ENG=[
+  {p:"Good morning, I'm available to work",t:'Buenos días, estoy disponible para trabajar',c:'Hostelería · entrevista'},
+  {p:"I'm hardworking and reliable",t:'Soy trabajadora y confiable',c:'Presentación personal'},
+  {p:'I have experience in cooking and cleaning',t:'Tengo experiencia en cocina y limpieza',c:'Hotel / trabajo doméstico'},
+  {p:'Could you please repeat that?',t:'¿Podría repetir eso, por favor?',c:'Conversación diaria'},
+  {p:'Thank you for the opportunity',t:'Gracias por la oportunidad',c:'Entrevista / trabajo'},
+  {p:'I am a fast learner',t:'Aprendo rápido',c:'Entrevista'},
+  {p:'What time should I arrive?',t:'¿A qué hora debo llegar?',c:'Trabajo · hotel'},
+  {p:'I would like to apply for this position',t:'Me gustaría aplicar a este puesto',c:'Solicitud de empleo'},
+  {p:'Nice to meet you',t:'Encantada de conocerle',c:'Presentación'},
+  {p:'Can I help you with anything?',t:'¿Le puedo ayudar en algo?',c:'Atención al cliente'},
+];
+const PHASES=[
+  {name:'Estabilizar',months:'Meses 1–3',items:['Rutina y estructura diaria','Trabajo en hotel o restaurante','Inglés 15 min al día','Paz mental y autocuidado','Fondo de emergencia €1,000']},
+  {name:'Crecer',months:'Meses 4–6',items:['Portafolio de cocina con fotos','Curso de hostelería o barista','Certificado manipulador alimentos','Construir comunidad local','Reputación + relaciones']},
+  {name:'Monetizar',months:'Meses 7–9',items:['Meal prep, arepas, empanadas','Clientes privados de cocina','WhatsApp Business activo','Probar oferta pequeña y segura','Crecer con calma']},
+  {name:'Prosperar',months:'Meses 10–12',items:['Hostelería premium o catering','Servicios domésticos premium','Marca pequeña y local','Elegir el camino con paz','Vida estable y hermosa']},
+];
+const RESOURCES=[
+  {n:'UAMI A Coruña',d:'Orientación migratoria, trámites y recursos sociales',ic:'ti-map-pin',cl:'ri-pu',tag:'Ir primero',url:'https://www.coruna.gal'},
+  {n:'Ecos do Sur',d:'Acogida, asesoría jurídica, salud mental, empleo',ic:'ti-heart',cl:'ri-pi',tag:'Muy importante',url:'https://ecosdosur.org'},
+  {n:'Servicio Público Emprego',d:'Cursos gratis de hostelería, cocina e idiomas',ic:'ti-briefcase',cl:'ri-te',tag:'Empleo',url:'https://emprego.xunta.gal'},
+  {n:'Cámara de Comercio A Coruña',d:'Cursos de barista, cocina, inglés, atención al cliente',ic:'ti-school',cl:'ri-am',tag:'Formación',url:'https://www.camaracoruna.com'},
+  {n:'Accem A Coruña',d:'Programas de integración, orientación y empleo',ic:'ti-users',cl:'ri-pu',tag:'Apoyo',url:'https://www.accem.es'},
+  {n:'Garantía Juvenil',d:'Formación gratuita y prácticas hasta 29 años',ic:'ti-certificate',cl:'ri-te',tag:'Hasta 29 años',url:'https://www.sepe.es'},
+];
+const SUN_QS=['¿Qué mejoró esta semana?','¿Qué me estresó y cómo lo manejé?','¿Qué me hizo feliz o me dio energía?','¿Estoy creciendo en algún área?','¿Estoy descansando suficiente?'];
+const DOCS=['Pasaporte','NIE / TIE','Empadronamiento','Justificante de solicitud','Cita de extranjería','Contrato de trabajo','Nóminas','Certificado manipulador alimentos','Certificado de formación'];
+
+function defST(){return{onboarded:false,phase:0,savings:0,goal:'',habitsDone:{},jobList:[],portfolio:[],sunAnswers:{},streak:0,lastDay:'',affIdx:0,engIdx:0,docsDone:{}};}
+var ST=defST(),activePh=0,curMood='Normal';
+
+function saveLocal(){try{localStorage.setItem(SKEY,JSON.stringify(ST));}catch(e){}}
+function loadLocal(){try{var d=localStorage.getItem(SKEY);if(d)ST=Object.assign(defST(),JSON.parse(d));}catch(e){}}
+
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function isSunday(){return new Date().getDay()===0;}
+function greet(){var h=new Date().getHours();return h<12?'Buenos días':h<18?'Buenas tardes':'Buenas noches';}
+
+function updateStreak(){
+  var today=todayStr();
+  if(ST.lastDay===today)return;
+  var yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  ST.streak=ST.lastDay===yest?(ST.streak||0)+1:1;
+  ST.lastDay=today;
+}
+
+function finishOnboard(){
+  ST.phase=parseInt(document.getElementById('ob-phase').value)||0;
+  ST.savings=parseFloat(document.getElementById('ob-savings').value)||0;
+  ST.goal=document.getElementById('ob-goal').value.trim()||'';
+  ST.onboarded=true;
+  updateStreak();saveLocal();launch();
+}
+
+function launch(){
+  document.getElementById('s-onboard').classList.remove('active');
+  document.getElementById('bnav').style.display='flex';
+  activePh=ST.phase;
+  renderHome();renderHabits();renderPhases();renderMoney();renderPortfolio();renderResources();
+  goTab('s-home',document.querySelector('.ntab'));
+}
+
+/* SETTINGS */
+function openSettings(){
+  document.getElementById('set-phase').value=ST.phase||0;
+  document.getElementById('set-goal').value=ST.goal||'';
+  document.getElementById('set-savings').value=Math.round(ST.savings||0);
+  document.getElementById('settings-modal').classList.add('open');
+}
+function closeSettings(){document.getElementById('settings-modal').classList.remove('open');}
+function closeSettingsOutside(e){if(e.target===document.getElementById('settings-modal'))closeSettings();}
+function saveSettings(){
+  ST.phase=parseInt(document.getElementById('set-phase').value)||0;
+  ST.goal=document.getElementById('set-goal').value.trim()||'';
+  ST.savings=parseFloat(document.getElementById('set-savings').value)||0;
+  activePh=ST.phase;
+  saveLocal();closeSettings();
+  renderHome();renderHabits();renderPhases();renderMoney();
+  toast('¡Guardado! ✓');
+}
+function resetApp(){
+  if(!confirm('¿Segura? Esto borrará todo y vuelve al inicio.'))return;
+  localStorage.removeItem(SKEY);ST=defST();closeSettings();
+  document.getElementById('bnav').style.display='none';
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s-onboard').classList.add('active');
+}
+
+/* HOME */
+function renderHome(){
+  document.getElementById('greeting').textContent=greet();
+  document.getElementById('streak-n').textContent=ST.streak||0;
+  document.getElementById('h-phase').textContent='Fase '+(ST.phase+1)+' · '+PHASES[ST.phase||0].name;
+  document.getElementById('h-sav').textContent='€'+Math.round(ST.savings||0)+' / €1,000';
+  document.getElementById('h-goal').textContent=ST.goal||'—';
+  document.getElementById('sun-home-banner').style.display=isSunday()?'block':'none';
+  buildAffDots();
+  document.getElementById('aff-txt').textContent=AFFS[ST.affIdx||0];
+  renderEng();buildHomeHabits();updateRing();
+}
+
+function buildAffDots(){
+  var d=document.getElementById('aff-dots');d.innerHTML='';
+  AFFS.forEach(function(_,i){var dot=document.createElement('div');dot.className='aff-dot'+(i===(ST.affIdx||0)?' on':'');d.appendChild(dot);});
+}
+function nextAff(){ST.affIdx=((ST.affIdx||0)+1)%AFFS.length;document.getElementById('aff-txt').textContent=AFFS[ST.affIdx];buildAffDots();saveLocal();}
+function renderEng(){var e=ENG[ST.engIdx||0];document.getElementById('eng-p').textContent=e.p;document.getElementById('eng-t').textContent=e.t;document.getElementById('eng-c').textContent=e.c;}
+function nextEng(){ST.engIdx=((ST.engIdx||0)+1)%ENG.length;renderEng();saveLocal();}
+function prevEng(){ST.engIdx=((ST.engIdx||0)-1+ENG.length)%ENG.length;renderEng();saveLocal();}
+function setMood(el,m){curMood=m;document.querySelectorAll('.mbtn').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}
+
+/* HABITS — always rebuild from saved state */
+function buildHomeHabits(){
+  var c=document.getElementById('home-habits');c.innerHTML='';
+  HABITS.slice(0,4).forEach(function(_,i){addHRow(c,i,true);});
+}
+function renderHabits(){
+  ['h-morning','h-afternoon','h-evening'].forEach(function(id){document.getElementById(id).innerHTML='';});
+  var map={morning:'h-morning',afternoon:'h-afternoon',evening:'h-evening'};
+  HABITS.forEach(function(h,i){addHRow(document.getElementById(map[h.t]),i,false);});
+  renderJobList();updateBar();
+}
+function addHRow(container,idx,isHome){
+  var h=HABITS[idx];var done=!!(ST.habitsDone&&ST.habitsDone[idx]);
+  var row=document.createElement('div');row.className='hrow';
+  row.innerHTML='<div class="hck'+(done?' done':'')+'" onclick="togH('+idx+',this,'+isHome+')"></div><span class="htxt'+(done?' done':'')+'">'+h.l+'</span><span class="hpill">'+h.p+'</span>';
+  container.appendChild(row);
+}
+function togH(idx,el,isHome){
+  if(!ST.habitsDone)ST.habitsDone={};
+  ST.habitsDone[idx]=!ST.habitsDone[idx];
+  el.classList.toggle('done');el.nextElementSibling.classList.toggle('done');
+  updateRing();updateBar();
+  if(!isHome&&idx<4)syncHomeH(idx);
+  if(isHome)syncFullH(idx);
+  if(ST.habitsDone[idx])toast('¡Hábito completado! 🌱');
+  saveLocal();
+}
+function syncHomeH(idx){
+  var rows=document.getElementById('home-habits').querySelectorAll('.hrow');
+  if(rows[idx]){var ck=rows[idx].querySelector('.hck');var tx=rows[idx].querySelector('.htxt');var d=!!(ST.habitsDone&&ST.habitsDone[idx]);ck.classList.toggle('done',d);tx.classList.toggle('done',d);}
+}
+function syncFullH(idx){
+  var map={0:'h-morning',1:'h-morning',2:'h-morning',3:'h-morning',4:'h-afternoon',5:'h-afternoon',6:'h-evening',7:'h-evening',8:'h-evening'};
+  var container=document.getElementById(map[idx]);
+  if(!container)return;
+  var rows=container.querySelectorAll('.hrow');
+  var offset=idx<=3?idx:idx<=5?idx-4:idx-6;
+  if(rows[offset]){var ck=rows[offset].querySelector('.hck');var tx=rows[offset].querySelector('.htxt');var d=!!(ST.habitsDone&&ST.habitsDone[idx]);ck.classList.toggle('done',d);tx.classList.toggle('done',d);}
+}
+function updateRing(){
+  var total=HABITS.length,done=Object.values(ST.habitsDone||{}).filter(Boolean).length;
+  var pct=Math.round(done/total*100);
+  document.getElementById('ring-pct').textContent=pct+'%';
+  document.getElementById('ring-dash').setAttribute('stroke-dashoffset',(175.9-(175.9*pct/100)).toFixed(1));
+}
+function updateBar(){
+  var total=HABITS.length,done=Object.values(ST.habitsDone||{}).filter(Boolean).length;
+  var pct=Math.round(done/total*100);
+  var b=document.getElementById('hbar');var bl=document.getElementById('hbar-pct');
+  if(b)b.style.width=pct+'%';if(bl)bl.textContent=pct+'%';
+}
+
+/* JOBS */
+function addJob(){
+  var v=document.getElementById('job-in').value.trim();if(!v)return;
+  if(!ST.jobList)ST.jobList=[];ST.jobList.push({n:v,s:'pending',date:todayStr()});
+  document.getElementById('job-in').value='';renderJobList();saveLocal();toast('Solicitud añadida 📋');
+}
+function cycleJob(i){var c=['pending','sent','reply'];ST.jobList[i].s=c[(c.indexOf(ST.jobList[i].s)+1)%c.length];renderJobList();saveLocal();}
+function delJob(i){ST.jobList.splice(i,1);renderJobList();saveLocal();}
+function renderJobList(){
+  var c=document.getElementById('job-list');if(!c)return;c.innerHTML='';
+  var lbl={pending:'Pendiente',sent:'Enviado',reply:'Respuesta'},cls={pending:'js-p',sent:'js-s',reply:'js-r'};
+  var todayJobs=(ST.jobList||[]).filter(function(j){return j.date===todayStr();}).length;
+  var jc=document.getElementById('job-count');if(jc)jc.textContent=todayJobs+' hoy';
+  (ST.jobList||[]).forEach(function(j,i){
+    var row=document.createElement('div');row.className='jrow';
+    row.innerHTML='<span class="jname">'+j.n+'</span><span class="jstat '+cls[j.s]+'" onclick="cycleJob('+i+')">'+lbl[j.s]+'</span><button class="jdel" onclick="delJob('+i+')"><i class="ti ti-trash"></i></button>';
+    c.appendChild(row);
+  });
+}
+
+/* PHASES */
+function renderPhases(){
+  var sc=document.getElementById('phase-scroll');sc.innerHTML='';
+  PHASES.forEach(function(p,i){
+    var chip=document.createElement('div');chip.className='pchip'+(i===activePh?' cur':'');
+    chip.innerHTML='<div class="pchip-n">Fase '+(i+1)+'</div><div class="pchip-name">'+p.name+'</div><div class="pchip-mo">'+p.months+'</div>';
+    chip.onclick=function(){activePh=i;renderPhases();};sc.appendChild(chip);
+  });
+  var p=PHASES[activePh];
+  document.getElementById('phase-detail').innerHTML='<div style="font-size:16px;font-weight:500;color:var(--txt);margin-bottom:12px;">Fase '+(activePh+1)+' · '+p.name+'</div>'+p.items.map(function(it){return '<div class="pirow">'+it+'</div>';}).join('');
+}
+
+/* MONEY */
+function renderMoney(){
+  var pct=Math.min(Math.round((ST.savings||0)/1000*100),100);
+  document.getElementById('sav-d').textContent='€'+Math.round(ST.savings||0);
+  document.getElementById('sav-bar').style.width=pct+'%';
+  document.getElementById('sav-pct').textContent=pct+'%';
+  var dl=document.getElementById('doc-list');dl.innerHTML='';
+  DOCS.forEach(function(d,i){
+    var row=document.createElement('div');row.className='doc-row';var done=!!(ST.docsDone&&ST.docsDone[i]);
+    row.innerHTML='<div class="hck'+(done?' done':'')+'" onclick="togDoc('+i+',this)"></div><span class="htxt'+(done?' done':'')+'">'+d+'</span>';
+    dl.appendChild(row);
+  });
+}
+function addSav(){
+  var v=parseFloat(document.getElementById('sav-in').value)||0;if(v<=0)return;
+  ST.savings=Math.min((ST.savings||0)+v,1000);document.getElementById('sav-in').value='';
+  renderMoney();document.getElementById('h-sav').textContent='€'+Math.round(ST.savings)+' / €1,000';
+  saveLocal();toast('¡Guardado! 🌱 €'+v+' añadidos');
+}
+function togDoc(i,el){if(!ST.docsDone)ST.docsDone={};ST.docsDone[i]=!ST.docsDone[i];el.classList.toggle('done');el.nextElementSibling.classList.toggle('done');saveLocal();}
+
+/* PORTFOLIO */
+function renderPortfolio(){
+  var c=document.getElementById('port-list');if(!c)return;c.innerHTML='';
+  var pc=document.getElementById('port-count');if(pc)pc.textContent=(ST.portfolio||[]).length;
+  (ST.portfolio||[]).forEach(function(p,i){
+    var item=document.createElement('div');item.className='port-item';
+    item.innerHTML='<div class="port-top"><span class="port-name">'+p.name+'</span><button class="port-del" onclick="delPort('+i+')"><i class="ti ti-trash"></i></button></div><div class="port-desc">'+(p.desc||'')+'</div><span class="port-tag">'+p.cat+'</span>';
+    c.appendChild(item);
+  });
+}
+function addPort(){
+  var n=document.getElementById('port-name').value.trim();if(!n)return;
+  var d=document.getElementById('port-desc').value.trim(),cat=document.getElementById('port-cat').value;
+  if(!ST.portfolio)ST.portfolio=[];ST.portfolio.push({name:n,desc:d,cat:cat});
+  document.getElementById('port-name').value='';document.getElementById('port-desc').value='';
+  renderPortfolio();saveLocal();toast('¡Añadido al portafolio! 🍳');
+}
+function delPort(i){ST.portfolio.splice(i,1);renderPortfolio();saveLocal();}
+
+/* SUNDAY */
+function renderSunday(){
+  var sent=(ST.jobList||[]).filter(function(j){return j.s!=='pending';}).length;
+  document.getElementById('wstats').innerHTML=
+    '<div class="wstat"><div class="wstat-n">'+Object.values(ST.habitsDone||{}).filter(Boolean).length+'</div><div class="wstat-l">Hábitos completados</div></div>'+
+    '<div class="wstat"><div class="wstat-n">'+sent+'</div><div class="wstat-l">Solicitudes enviadas</div></div>'+
+    '<div class="wstat"><div class="wstat-n">'+(ST.streak||0)+'</div><div class="wstat-l">Días seguidos 🔥</div></div>'+
+    '<div class="wstat"><div class="wstat-n">€'+Math.round(ST.savings||0)+'</div><div class="wstat-l">Fondo emergencia</div></div>';
+  var qc=document.getElementById('sun-qs');qc.innerHTML='';
+  SUN_QS.forEach(function(q,i){
+    var saved=(ST.sunAnswers&&ST.sunAnswers[i])||'';
+    var card=document.createElement('div');card.className='sun-q';
+    card.innerHTML='<label>'+q+'</label><textarea placeholder="Escribe aquí..." oninput="saveSQ('+i+',this.value)">'+saved+'</textarea>';
+    qc.appendChild(card);
+  });
+  var ng=document.getElementById('next-goal');if(ng)ng.value=ST.goal||'';
+}
+function saveSQ(i,v){if(!ST.sunAnswers)ST.sunAnswers={};ST.sunAnswers[i]=v;saveLocal();}
+function saveGoal(){
+  var v=document.getElementById('next-goal').value.trim();
+  if(v){ST.goal=v;document.getElementById('h-goal').textContent=v;saveLocal();toast('Intención guardada 🌸');}
+}
+function doSundayReflect(){
+  var answers=SUN_QS.map(function(q,i){return q+': '+((ST.sunAnswers&&ST.sunAnswers[i])||'(sin respuesta)');}).join('\n');
+  openClaude('Soy Orianni, venezolana viviendo en A Coruña. Aquí están mis respuestas del domingo de reset:\n'+answers+'\nDame una reflexión cálida y motivadora, y una sugerencia concreta para la semana que viene.');
+}
+
+/* RESOURCES */
+function renderResources(){
+  var c=document.getElementById('resource-list');if(!c)return;c.innerHTML='';
+  RESOURCES.forEach(function(r){
+    var item=document.createElement('div');item.className='res-item';
+    item.innerHTML='<div class="ricon '+r.cl+'"><i class="ti '+r.ic+'"></i></div><div class="rbody"><div class="rname">'+r.n+'</div><div class="rdesc">'+r.d+'</div><span class="rtag">'+r.tag+'</span></div><i class="ti ti-external-link" style="font-size:16px;color:var(--txt3);align-self:center;"></i>';
+    item.onclick=function(){window.location.href=r.url;};
+    c.appendChild(item);
+  });
+}
+
+/* NAV */
+function goTab(sid,btn){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.querySelectorAll('.ntab').forEach(function(b){b.classList.remove('on');});
+  document.getElementById(sid).classList.add('active');btn.classList.add('on');
+  if(sid==='s-sunday')renderSunday();
+  window.scrollTo(0,0);
+}
+
+/* CLAUDE */
+function openClaude(prompt){
+  var url='https://claude.ai/new?q='+encodeURIComponent(prompt);
+  var w=window.open(url,'_blank');
+  if(!w){window.location.href=url;}
+}
+
+/* TOAST */
+function toast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+
+/* INIT */
+function init(){
+  loadLocal();
+  if(ST.onboarded){updateStreak();saveLocal();launch();}
+}
+init();
+</script>
+</body>
+</html>
